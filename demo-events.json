@@ -1,0 +1,100 @@
+{
+  "title": "Community Bot subscriber-role synchronization evidence",
+  "application_id": "1508181709328355450",
+  "server": "Medow Mafia",
+  "observed_at": "2026-10-18T14:25:26.119443-07:00",
+  "source": "Read-only Discord Audit Log API; no role changes made for this evidence collection",
+  "events": [
+    {
+      "audit_id": "1561378209596051646",
+      "time_pacific": "2026-10-18T06:59:34.172000-07:00",
+      "action": "Added",
+      "roles": [
+        "Loot Goblin (Tier 1 Sub)"
+      ],
+      "reason": "Community Bot: combined tier sub role sync"
+    },
+    {
+      "audit_id": "1561165756329361488",
+      "time_pacific": "2026-10-17T16:55:21.366000-07:00",
+      "action": "Added",
+      "roles": [
+        "Loot Goblin (Tier 1 Sub)"
+      ],
+      "reason": "Community Bot: combined tier sub role sync"
+    },
+    {
+      "audit_id": "1561165755263750144",
+      "time_pacific": "2026-10-17T16:55:21.112000-07:00",
+      "action": "Added",
+      "roles": [
+        "Loot Goblin (Tier 1 Sub)"
+      ],
+      "reason": "Community Bot: combined tier sub role sync"
+    },
+    {
+      "audit_id": "1561165755213676634",
+      "time_pacific": "2026-10-17T16:55:21.100000-07:00",
+      "action": "Added",
+      "roles": [
+        "Loot Goblin (Tier 1 Sub)"
+      ],
+      "reason": "Community Bot: combined tier sub role sync"
+    },
+    {
+      "audit_id": "1561165754693451890",
+      "time_pacific": "2026-10-17T16:55:20.976000-07:00",
+      "action": "Added",
+      "roles": [
+        "Loot Goblin (Tier 1 Sub)"
+      ],
+      "reason": "Community Bot: combined tier sub role sync"
+    },
+    {
+      "audit_id": "1561152871830130698",
+      "time_pacific": "2026-10-17T16:04:09.462000-07:00",
+      "action": "Added",
+      "roles": [
+        "Loot Goblin (Tier 1 Sub)"
+      ],
+      "reason": "Community Bot: combined tier sub role sync"
+    },
+    {
+      "audit_id": "1560793623916970104",
+      "time_pacific": "2026-10-16T16:16:38.085000-07:00",
+      "action": "Removed",
+      "roles": [
+        "Loot Goblin (Tier 1 Sub)"
+      ],
+      "reason": "Community Bot: combined tier sub role sync"
+    },
+    {
+      "audit_id": "1560437966483226714",
+      "time_pacific": "2026-10-15T16:43:22.745000-07:00",
+      "action": "Added",
+      "roles": [
+        "Loot Goblin (Tier 1 Sub)"
+      ],
+      "reason": "Community Bot: combined tier sub role sync"
+    },
+    {
+      "audit_id": "1560436061912436776",
+      "time_pacific": "2026-10-15T16:35:48.660000-07:00",
+      "action": "Added",
+      "roles": [
+        "Loot Goblin (Tier 1 Sub)"
+      ],
+      "reason": "Community Bot: combined tier sub role sync"
+    },
+    {
+      "audit_id": "1560419493401071696",
+      "time_pacific": "2026-10-15T15:29:58.419000-07:00",
+      "action": "Added",
+      "roles": [
+        "Loot Goblin (Tier 1 Sub)"
+      ],
+      "reason": "Community Bot: combined tier sub role sync"
+    }
+  ],
+  "limitation": "Audit records prove actual role changes by the bot. They do not alone identify whether each change was triggered by a member update, startup sweep or participant refresh. Full server-wide member-event sync currently disabled after privileged access removal."
+}

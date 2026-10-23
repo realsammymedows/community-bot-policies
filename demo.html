@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Community Bot: Subscriber-Role Sync Audit-Log Evidence Report</title>
+<style>
+  :root {
+    --ink: #1d2230;
+    --muted: #5b6275;
+    --line: #dfe3ec;
+    --panel: #f6f7fb;
+    --brand: #4f5bd5;
+    --add: #1f8a4c;
+    --add-bg: #e5f5ec;
+    --rem: #b3261e;
+    --rem-bg: #fbe9e7;
+    --warn: #8a5a00;
+    --warn-bg: #fff4d6;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: #eceef5;
+    color: var(--ink);
+    font: 15px/1.55 "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .page {
+    max-width: 960px;
+    margin: 32px auto;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 18px rgba(20, 24, 40, .08);
+    overflow: hidden;
+  }
+  header.top {
+    background: linear-gradient(135deg, #3b45b8 0%, #5865f2 60%, #7a6ff0 100%);
+    color: #fff;
+    padding: 28px 36px 24px;
+  }
+  header.top .kicker {
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    opacity: .85;
+    margin: 0 0 6px;
+  }
+  header.top h1 { margin: 0 0 6px; font-size: 26px; line-height: 1.25; }
+  header.top p { margin: 0; opacity: .92; }
+  .notice {
+    margin: 0;
+    padding: 14px 36px;
+    background: var(--warn-bg);
+    color: var(--warn);
+    border-bottom: 1px solid #f0dca0;
+    font-weight: 600;
+  }
+  .notice span { font-weight: 400; color: #5e4a14; }
+  main { padding: 8px 36px 32px; }
+  h2 {
+    font-size: 17px;
+    margin: 30px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--line);
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 22px 0 4px;
+  }
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .stat b { display: block; font-size: 24px; line-height: 1.2; }
+  .stat small { color: var(--muted); }
+  .stat.add b { color: var(--add); }
+  .stat.rem b { color: var(--rem); }
+  dl.ident {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 6px 16px;
+    margin: 0;
+  }
+  dl.ident dt { color: var(--muted); }
+  dl.ident dd { margin: 0; }
+  code, .mono {
+    font-family: Consolas, "Cascadia Mono", "SFMono-Regular", Menlo, monospace;
+    font-size: 13px;
+  }
+  code { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); background: var(--panel); }
+  td.num { color: var(--muted); width: 32px; }
+  .pill {
+    display: inline-block;
+    padding: 1px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .pill.add { background: var(--add-bg); color: var(--add); }
+  .pill.rem { background: var(--rem-bg); color: var(--rem); }
+  .day td { background: #fafbfe; font-weight: 600; color: var(--muted); font-size: 13px; }
+  .limits {
+    background: var(--rem-bg);
+    border: 1px solid #f1c6c1;
+    border-left: 5px solid var(--rem);
+    border-radius: 8px;
+    padding: 12px 16px;
+  }
+  .limits ul, .card ul { margin: 6px 0 0; padding-left: 20px; }
+  .limits li, .card li { margin: 4px 0; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 16px;
+  }
+  .hash { word-break: break-all; }
+  footer {
+    padding: 16px 36px 24px;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--line);
+  }
+  @media (max-width: 720px) {
+    .page { margin: 0; border-radius: 0; }
+    header.top, main, footer, .notice { padding-left: 18px; padding-right: 18px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    dl.ident { grid-template-columns: 1fr; }
+    dl.ident dt { margin-top: 6px; }
+  }
+  @media print {
+    @page { size: Letter; margin: 14mm; }
+    body { background: #fff; font-size: 11pt; }
+    .page { margin: 0; max-width: none; box-shadow: none; border-radius: 0; }
+    header.top { background: none; color: var(--ink); border-bottom: 3px solid var(--ink); padding: 0 0 10px; }
+    header.top .kicker, header.top p { opacity: 1; }
+    .notice { border: 2px solid var(--warn); padding: 8px 12px; margin-top: 10px; }
+    main, footer { padding-left: 0; padding-right: 0; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    h2 { break-after: avoid; }
+    tr, .limits, .card, .stat { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="top">
+  <p class="kicker">Audit-log evidence report · supporting material</p>
+  <h1>Community Bot: Subscriber-Role Sync</h1>
+  <p>Real role changes made by Community Bot in the Medow Mafia server, taken from Discord's own audit log, October 15–18, 2026 (Pacific time).</p>
+</header>
+
+<p class="notice">This is an audit-log evidence report. It is NOT a Discord screenshot, NOT a recording, and NOT a live demo.
+<span>Each row comes from a Discord Audit Log API record. Nothing here is a mock-up or recreated Discord screen. Member names and IDs are left out on purpose. This is supporting evidence only; Discord may still ask for something else.</span></p>
+
+<main>
+<p><a href="role-sync-evidence.png">View the evidence image</a> · <a href="demo-events.json">Download the redacted audit summary</a> · <a href="privacy">Privacy policy</a></p>
+
+<div class="stats">
+  <div class="stat"><b>10</b><small>role-change audit records</small></div>
+  <div class="stat add"><b>9</b><small>role additions</small></div>
+  <div class="stat rem"><b>1</b><small>role removal</small></div>
+  <div class="stat"><b>10</b><small>different members (withheld)</small></div>
+</div>
+
+<h2>What the feature does</h2>
+<p>Community Bot keeps combined subscriber roles in step with the server's Twitch subscriber and YouTube membership integration roles. The records below show the Tier 1 role, <strong>Loot Goblin (Tier 1 Sub)</strong>; the bot also has Tier 2 and Tier 3 mappings. It adds the combined role when a member has a qualifying integration role and removes it when none are left. Every change carries the audit-log reason <code>Community Bot: combined tier sub role sync</code>.</p>
+<p>The full version checks every server member at startup and reacts when a member's roles change, even if that member never uses the bot. Discord's <strong>Guild Members</strong> intent is being requested only to bring back that server-wide sync. Presence and Message Content are not requested.</p>
+
+<h2>Bot and server identity</h2>
+<dl class="ident">
+  <dt>Application / bot user</dt><dd>Community Bot · <span class="mono">1508181709328355450</span></dd>
+  <dt>Server</dt><dd>Medow Mafia · <span class="mono">603784861869932546</span></dd>
+  <dt>Acting user on every record</dt><dd><span class="mono">1508181709328355450</span> (the bot itself)</dd>
+  <dt>Audit action type</dt><dd><span class="mono">25</span> = Member Role Update</dd>
+  <dt>Role changed</dt><dd>Loot Goblin (Tier 1 Sub) · role <span class="mono">1531443257639309365</span></dd>
+</dl>
+
+<h2>Audit records (newest first, Pacific time)</h2>
+<table>
+  <thead>
+    <tr><th>#</th><th>Time (PDT)</th><th>Change</th><th>Role</th><th>Audit entry ID</th></tr>
+  </thead>
+  <tbody>
+    <tr class="day"><td colspan="5">Sunday, October 18, 2026</td></tr>
+    <tr><td class="num">1</td><td>6:59:34.172 AM</td><td><span class="pill add">Added</span></td><td>Loot Goblin (Tier 1 Sub)</td><td class="mono">1561378209596051646</td></tr>
+    <tr class="day"><td colspan="5">Saturday, October 17, 2026</td></tr>
+    <tr><td class="num">2</td><td>4:55:21.366 PM</td><td><span class="pill add">Added</span></td><td>Loot Goblin (Tier 1 Sub)</td><td class="mono">1561165756329361488</td></tr>
+    <tr><td class="num">3</td><td>4:55:21.112 PM</td><td><span class="pill add">Added</span></td><td>Loot Goblin (Tier 1 Sub)</td><td class="mono">1561165755263750144</td></tr>
+    <tr><td class="num">4</td><td>4:55:21.100 PM</td><td><span class="pill add">Added</span></td><td>Loot Goblin (Tier 1 Sub)</td><td class="mono">1561165755213676634</td></tr>
+    <tr><td class="num">5</td><td>4:55:20.976 PM</td><td><span class="pill add">Added</span></td><td>Loot Goblin (Tier 1 Sub)</td><td class="mono">1561165754693451890</td></tr>
+    <tr><td class="num">6</td><td>4:04:09.462 PM</td><td><span class="pill add">Added</span></td><td>Loot Goblin (Tier 1 Sub)</td><td class="mono">1561152871830130698</td></tr>
+    <tr class="day"><td colspan="5">Friday, October 16, 2026</td></tr>
+    <tr><td class="num">7</td><td>4:16:38.085 PM</td><td><span class="pill rem">Removed</span></td><td>Loot Goblin (Tier 1 Sub)</td><td class="mono">1560793623916970104</td></tr>
+    <tr class="day"><td colspan="5">Thursday, October 15, 2026</td></tr>
+    <tr><td class="num">8</td><td>4:43:22.745 PM</td><td><span class="pill add">Added</span></td><td>Loot Goblin (Tier 1 Sub)</td><td class="mono">1560437966483226714</td></tr>
+    <tr><td class="num">9</td><td>4:35:48.660 PM</td><td><span class="pill add">Added</span></td><td>Loot Goblin (Tier 1 Sub)</td><td class="mono">1560436061912436776</td></tr>
+    <tr><td class="num">10</td><td>3:29:58.419 PM</td><td><span class="pill add">Added</span></td><td>Loot Goblin (Tier 1 Sub)</td><td class="mono">1560419493401071696</td></tr>
+  </tbody>
+</table>
+<p style="color:var(--muted);font-size:13px;margin-top:8px">Every record has the reason <code>Community Bot: combined tier sub role sync</code>. Each time matches the timestamp built into its audit entry ID (Discord snowflake), checked when this report was made. Each record is for a different member; the member's ID and name are left out.</p>
+
+<h2>Limits of this evidence</h2>
+<div class="limits">
+  <ul>
+    <li><strong>It proves the role changes happened, not what started each one.</strong> A role-change audit record does not say whether the bot was reacting to a member update, running its startup check, or refreshing someone who was using the bot. This report does not claim any single change came from a privileged member event.</li>
+    <li><strong>Server-wide member-event sync is off right now.</strong> Discord removed the app's privileged intents. On October 18, 2026 at 11:04 AM PDT the app's privileged-intent flags read <span class="mono">0</span>. After recovery later that morning, the bot now runs in a reduced mode: it can still sync people it sees through voice events, slash commands, and one-at-a-time member lookups, but not the whole server.</li>
+    <li>All 10 records are timestamped <strong>before</strong> that 11:04 AM PDT check. They show historical role changes, not a live test of the currently disabled server-wide member-event handler.</li>
+    <li>This is a summary of API records, not a screenshot of Discord's Audit Log screen. It is supporting evidence, and Discord may not accept it as the demo it asks for.</li>
+  </ul>
+</div>
+
+<h2>Where this came from</h2>
+<div class="card">
+  <ul>
+    <li><strong>Method:</strong> one read-only <code>GET</code> to the Discord Audit Log API using the bot's own normal identity. It returned HTTP 200 on October 18, 2026 at 2:25:26 PM PDT. No roles, permissions, messages, or bot settings were changed to collect this.</li>
+    <li><strong>Raw records (private, include member IDs):</strong> <span class="mono">demo-audit-evidence.json</span><br>SHA-256 <span class="mono hash">43dd9acf1210f5648fe942614b913e7eac55fa56b6a3654588acf18784b12ba0</span></li>
+    <li><strong>Reviewer summary (no member IDs):</strong> <span class="mono">demo-event-summary.json</span><br>SHA-256 <span class="mono hash">c5b0cf799e496be9b496acad4afe86ee4745506a633ab6fa6bf9a9799e822704</span></li>
+    <li><strong>Not included on purpose:</strong> member IDs, usernames, avatars, tokens, and any secrets.</li>
+  </ul>
+</div>
+
+</main>
+
+<footer>
+  Report prepared October 18, 2026 from existing audit records. No external files, scripts, fonts, or images. Community Bot is independent and is not endorsed by or affiliated with Discord, Inc.
+</footer>
+
+</div>
+</body>
+</html>

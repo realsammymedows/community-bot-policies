@@ -1,178 +1,96 @@
 # Privacy Policy for Community Bot
 
-**Last updated: June 11, 2026**
+**Last updated: October 19, 2026**
 
-This Privacy Policy describes how **Community Bot** ("the Bot", "we", "us") collects, uses, stores, and shares information when you interact with it inside the Discord server in which it is installed. Community Bot is a self-hosted Discord bot that manages a "Community Day" viewer voice-channel queue and renders a weekly stream schedule message.
+Community Bot is operated by Sammy (`sammymedows`) for the Medow Mafia community. It manages the Community Day player queue, subscriber roles, a stream schedule, moderation reports, optional feedback forms, stream-information commands, optional Apple account setup and verification, and emote requests. Discord also processes your activity under [Discord's Privacy Policy](https://discord.com/privacy).
 
-This policy is specific to Community Bot and is separate from [Discord's Privacy Policy](https://discord.com/privacy), which governs Discord's own handling of your data.
+## Operator and contact
 
----
+The operator is Sammy, an individual streamer in California, United States. For privacy questions or requests, email **sammymedows@gmail.com** or send a Discord direct message to **sammymedows**.
 
-## 1. Data Controller
+The bot runs on the operator's computer. Some records are stored on the operator's network storage. Moderation reports and feedback may also be delivered to the operator's separate Roark Discord server.
 
-The data controller for Community Bot is:
+## Information used
 
-- **Operator:** Sammy ("sammymedows"), an individual streamer self-hosting the Bot.
-- **Jurisdiction:** California, United States
-- **Contact:** sammymedows@gmail.com (you may also reach the operator via a direct message on Discord to `sammymedows`).
-
-Community Bot is **self-hosted on the operator's personal computer**. It is not a multi-tenant cloud service. It runs in a single Discord server (the "Medow Mafia" server) and does not collect data from any other server.
-
-The operator has assessed that a Data Protection Officer (DPO) is not mandatory under GDPR Article 37, because the Bot does not carry out large-scale systematic monitoring or process special-category data. The contact above remains the single point of contact for all privacy questions.
-
----
-
-## 2. What Data the Bot Collects
-
-Community Bot is built to collect the absolute minimum needed to run a voice-channel queue. **The Bot does not read message content** — the Discord Message Content intent is explicitly disabled in code.
-
-### 2.1 Data the Bot processes in memory only (never written to disk)
-
-| Data | Source | Purpose |
+| Feature | Information used | Purpose |
 |---|---|---|
-| Your Discord user ID | Discord gateway (voice state updates, button/select interactions, member cache) | Track who is in which tier voice channel, who is currently in the LIVE channel, who has opted out, and who has been "kept" for the next pull. |
-| Which voice channel you are in (channel ID) | Discord gateway `VOICE_STATE_UPDATE` | Decide which tier (0/1/2/3) you belong to in the queue and whether you are in LIVE. |
-| Your server display name | Discord member cache | Render your name in the public queue embed in `#the-list`, in the host Control Panel, in the Move/Remove dropdowns, and in the local HTTP `/line` response. **Not written to disk.** |
-| Your bot flag (true/false) | Discord member object | Filter bot accounts out of the queue. |
-| Your role IDs | Discord member cache | Check whether you hold the configured "blocked" role; if so, silently exclude you from the queue. The Bot reads role IDs only — no role names or other role metadata. |
-| Your Discord permission flags (`move_members`, `manage_guild`, `administrator`) | Discord member object | Decide whether you may use the host/mod Control Panel buttons. |
-| A voice-join timestamp | Generated locally when you enter a tier voice channel | Order viewers first-come-first-served inside a tier. Held in RAM only; never written to disk. |
-| Server ID and server-owner user ID | Discord guild object | Identify the single configured server the Bot operates in, and grant the server owner access to the Control Panel and to hidden tier channels. |
+| Queue and Squad Link | Discord user IDs, display names, voice-channel IDs, join times, queue position, game counts, paired-player IDs, and invitation message IDs | Keep the queue, organize pairs, display participants, and move selected players between voice channels |
+| Roles and permissions | Server and owner IDs, member role IDs and names, permission flags, and relevant membership information | Check queue and feature access, maintain participant subscriber roles and restrict moderator controls |
+| Commands | Command text and supplied arguments, caller ID and display name, role/permission information, and temporary cooldown timestamps | Return information and enforce permissions and cooldowns |
+| Schedule | Operator-entered schedule text, dates and stream titles, public broadcast links/times, channel IDs, and the schedule message ID | Publish and update the stream schedule |
+| Moderation | AutoMod rule/channel details, flagged account ID and name, account/server membership age, relevant role names, available flagged text, and moderator decisions | Report suspected advertising and support moderator decisions |
+| Optional feedback | User ID, Discord username and display name, submission time, topic, experience text, and answer text | Deliver identified feedback to Sammy |
 
-All of the above is **session-scoped**. It is wiped when the Bot process restarts, when the host clicks **Close** or **Open** on Community Day, or when you leave all tier voice channels (your voice-state entry is then dropped).
+Feedback is **identified, not anonymous**. A submitted answer can contain up to 1,000 characters, plus an experience field of up to 100 characters. The bot does not record voice audio. An avatar URL may be used to display the feedback author in Discord; the feature does not download and keep the avatar image.
 
-### 2.2 Data the Bot writes to disk on the operator's machine
+## Optional account setup and chat proof
 
-| File | Contents |
-|---|---|
-| `settings.json` | Queue configuration only: open/closed flag, active tiers, group size, random-pull flag, tier-priority flag, hidden-tiers list, and the Discord **message ID** of the public hub message the Bot edits in `#the-list`. **No user IDs, no usernames, no message content.** |
-| `channel_snapshots.json` | A snapshot of each tier voice channel's existing Discord permission overwrites (role/member IDs, allow/deny bitfields) taken at the moment the channel was first hidden, so the original permissions can be restored later. In current operation, only **role** overwrites are present; no per-user entries. |
-| `schedule.json` | The weekly stream schedule (timezone, weekday defaults, date-specific overrides, the schedule message's channel ID and message ID). **No user data.** |
-| `.env` | Bot token and configuration IDs (guild ID, channel IDs, optional `EXCLUDE_USER_IDS` list, and the blocked-role ID). The `EXCLUDE_USER_IDS` entries are Discord user IDs — personal data — placed there manually by the operator to exempt specific users (e.g. the operator and co-hosts) from ever being pulled; they are retained until the operator removes them. Edited by the operator; not modified by the Bot at runtime. |
+Opening Apple account setup creates a basic record with your Discord ID, server ID, username and display name. A language choice can be saved before the setup consent step. Later optional steps record consent and progress, watch preferences, Twitch or YouTube handles or links, verified platform account IDs, and verification details. Optional game details include edition, platform, launcher, account country or region, server, game UID, character name, and preferred reward account. Do not submit passwords or payment details.
 
-The Bot does **not** persist usernames, handles, avatars, email addresses, IP addresses, message content, voice audio, attachments, or any history of past sessions or past players.
+To verify a Twitch or YouTube account, you may be asked to post a short code in one of Sammy's configured public stream chats and confirm the matched account in Discord. The bot reads those chats through Twitch IRC or the YouTube API to find codes. It uses the sender's platform ID, name, message reference, source and time. The code message is public. Ordinary messages without a code are ignored by this proof feature rather than saved as a conversation archive. This statement does not describe other stream-chat systems.
 
-### 2.3 Privileged intents
+Setup profiles, current and former links, game records, consent/progress records, verification codes and their status, and event history are saved in local databases. Codes have an expiry for use; expiry does not mean all code and verification records are deleted. Some code text is cleared when a code is cancelled, consumed or conflicts. Delivery references used to reject duplicate proof events are cleaned after about a day when further events are processed. Other profile and verification records have no automatic deletion period. Local exports and backup copies may also exist.
 
-Community Bot uses two Discord gateway intents that affect what user data Discord forwards to it:
+As of this update, signup and chat proof remain enabled in the restricted pilot. New subscription-history checks and the new Apple rewards launch are paused. Existing history is retained: it can include linked account and channel IDs, subscription months, recorded or estimated tiers, paid/Prime/gift evidence, gifter account IDs, timestamps and review notes. A separate imported evidence index also retains historical platform account IDs and names, subscriber snapshots and subscription events from operator-held platform records and stream logs; those records are not limited to people who completed this signup. Pausing the feature does not erase these records. This setup bot does not currently issue Apple rewards; separate existing stream points continue under their own system.
 
-- **Server Members intent (privileged):** required to maintain the member cache so the Bot can resolve display names and role membership for queued users. Member data received via this intent is held in memory only and is not exported or persisted.
-- **Voice States intent:** required to know who enters and leaves the tier voice channels.
-- **Message Content intent: OFF.** The Bot cannot read what users type in chat. Its entire user-facing UX is buttons and ephemeral select menus.
+## Emote requests
 
----
+An emote request saves your Discord ID and display name, the emote name, description and notes, submission time, optional reference images, and review/workflow details. Up to two supplied reference images can be downloaded and stored, with filenames, file type, size and checksums. The request card and saved reference images are posted in the request channel and are visible to people with access to that channel, not just the operator.
 
-## 3. Purposes of Processing and Lawful Basis (GDPR Article 6)
+Requests and review history are stored in a local database. Approved requests, including the requester name/ID and reference images, are copied to the operator's network design queue. They can be used by the operator's AI-assisted drafting workflow to create an emote concept. The bot itself does not call an image-generation API or automatically publish an emote to a platform. Generated drafts and workflow records may be kept alongside the approved request. There is no automatic deletion period for these records or saved images; rejection does not erase them.
 
-| Purpose | Lawful basis |
-|---|---|
-| Running the viewer queue (tracking voice presence, ordering the line, pulling viewers into LIVE, honouring opt-outs and the blocked role) | **Legitimate interest** (Art. 6(1)(f)) — operating a functional viewer queue inside a server you have voluntarily joined. A balancing test has been carried out; processing is limited to Discord IDs and transient display names, no profiling occurs, and you can opt out at any time via the **Leave** / **Skip Me** buttons. |
-| Allowing host/moderators to authorise themselves to use the Control Panel | **Legitimate interest** (Art. 6(1)(f)) — necessary for safe administration. |
-| Rendering the weekly stream schedule message | **Legitimate interest** (Art. 6(1)(f)) — no personal data is processed for this purpose. |
-| Local HTTP `/line` endpoint exposing the current queue text to Streamer.bot on the LAN | **Legitimate interest** (Art. 6(1)(f)) — needed to surface the queue on the live stream overlay; only display names already visible inside the Discord channel are exposed. |
+The separate automated drafting task is paused as of this update; approved files remain stored. When an approved request is processed by the configured AI drafting workflow, it uses OpenAI's ChatGPT/Codex and its built-in image generator. Approved job files, including the requester's name/ID and supplied design material, are made available to ChatGPT/Codex; design text and reference images can also be sent to the image generator. Processing by those services follows their applicable terms and the operator's account settings; this policy does not promise a particular provider retention period or training setting.
 
-The Bot performs **no automated decision-making with legal or similarly significant effects** within the meaning of GDPR Article 22, and **no profiling**.
+## Commands and message reading
 
----
+Native Discord commands such as `/builds`, `/coins`, `/commands`, and `/command` receive the text supplied in the command interaction. They do not require access to ordinary channel conversations. Responses come from the shared stream-command catalogue. Public responses can contain a supplied target name or the caller's display name. Restricted commands require the configured moderator role, server ownership, or Administrator permission.
 
-## 4. Where Data Is Stored
+The command handler does not save command text or fetch past channel messages. It keeps bounded cooldown records in memory. It does not send command text to an AI service or use it to train models.
 
-All persistent files (`settings.json`, `channel_snapshots.json`, `schedule.json`, `.env`) live on the operator's **local personal computer** at `C:\TOOLS\community-bot\`. The Bot is **not** hosted on any cloud provider, VPS, or third-party database. There is no off-site backup of Bot data, no analytics service, no error-tracking service (e.g., Sentry), and no AI/third-party API integration.
+Ordinary channel `!commands` require Discord's Message Content permission and are currently disabled. If enabled after approval, the feature examines newly delivered messages in the configured server to recognize commands. It ignores direct messages, bots, webhooks, and other servers. Ordinary messages do not trigger a response. There is no separate per-member switch preventing message delivery when this permission is enabled.
 
-In-memory queue state (voice states, line, playing, opted-out, kept users) lives only in the Bot process's RAM and never touches disk.
+The bot can still receive content intentionally supplied through forms or command interactions, and messages that Discord makes available when addressed to it. The schedule feature checks messages from the operator in its configured channel. The bot does not use Presence access to monitor online status. In its current mode, it uses information from voice events and interactions plus specific-member lookups for relevant participants; it does not download a full server membership list. Guild-wide subscriber-role synchronization is currently paused.
 
-The operator's computer is located in California, United States. Any data you submit by interacting with the Bot is processed there.
+Message Content access also affects AutoMod events. Without it, reports ordinarily contain rule and account details without the message text. If Discord provides flagged text, the moderation feature may include up to 600 characters in its report. Those reports can be retained in Discord, logs, and reporting systems. The command handler's no-storage behavior does not apply to moderation reports or submitted feedback.
 
----
+## Storage and retention
 
-## 5. Who Data Is Shared With
+- **Queue state:** Account IDs, voice-channel information, queue order, game counts, pairings, and invitation references are saved locally so a restart can restore the session. Opening or closing Community Day resets relevant session records. Leaving the queue does not erase all records, such as game counts or logs.
+- **Configuration:** Server, channel, role, and message IDs, exclusion IDs, schedule details, and settings remain until changed or removed. Older snapshots may remain in backups.
+- **Cooldowns:** Command cooldowns are held in memory with a bounded per-user cache, cleared on restart or eviction.
+- **Feedback:** Identified feedback is appended to topic files on network storage. The feature also attempts to deliver it to the operator's feedback channel in Roark. There is no automatic deletion period.
+- **Ledger and logs:** Queue actions, pair changes, Community Day changes, moderation events, and errors may be recorded in logs and an append-only network-storage ledger. Records can include names, account IDs, timestamps, action summaries, and moderation details. The ledger writer has no automatic deletion period.
+- **Backups:** Operational files may remain in backups until removed. Deleting a live record does not automatically remove every backup copy.
+- **Discord messages:** Queue displays, command replies, moderation reports, and feedback copies remain until edited or deleted. Discord's own retention practices also apply.
 
-Community Bot transmits data to the following recipients only:
+The command catalogue contains operator-maintained responses and settings plus the current queue text used by `!list`; it is not a viewer-message archive. Records without an automatic deletion period remain until removed by the operator. Stopping or removing the bot does not automatically delete files, backups, activity records, or existing Discord messages.
 
-1. **Discord, Inc.** — via the standard Discord Gateway (WSS) and REST API. This is unavoidable: the Bot is a Discord application, and operating a queue requires sending message edits, voice-channel moves, channel-permission edits, and component definitions to Discord. The data sent consists of Discord IDs (user, channel, role, guild, message), embed text built from display names and tier labels, button/select definitions, and permission-overwrite bitfields. Discord's handling of this data is governed by [Discord's Privacy Policy](https://discord.com/privacy).
-2. **A local HTTP endpoint on the operator's LAN** (`GET /line` on TCP port 8767). This endpoint returns the current public queue as plain text — viewer display names and tier positions — with **no authentication**. Any device on the same local network as the operator's PC that can reach TCP 8767 can read the current line. This information is the same information already visible in `#the-list` inside Discord; no additional data (user IDs, role data, voice metadata) is exposed. The intended consumer is the operator's Streamer.bot instance.
+## Where information goes
 
-The Bot makes **no other outbound network calls**: no analytics, no telemetry, no crash reporting, no third-party APIs, no webhooks, no cloud sync.
+The bot sends responses, messages, role changes, and voice-channel actions to Discord. Twitch and YouTube process public chat proof under their own privacy practices; the bot connects to those services to read the relevant chats. Approved emote requests also enter the operator's design workflow described above. It also sends moderation reports and feedback to the operator's Roark server or reporting service and saves the records described above on the operator's computer or network storage.
 
-### International transfers
+The queue is displayed in the community server, copied into the shared `!list` stream-chat response, and can be used on stream. A local HTTP feed provides participant names and queue information to stream tools. The feed has no application-level login and listens on the host's network interfaces; devices able to reach it can read it. Its exposure depends on firewall and network settings.
 
-The Bot itself does not transfer data internationally. However, Discord, Inc. is based in the United States and your data is transmitted to Discord's infrastructure as part of any Discord interaction. This transfer is governed by Discord's own privacy framework, which relies on Standard Contractual Clauses and/or the EU-US Data Privacy Framework. Please refer to Discord's Privacy Policy for details.
+Public replies are visible to people who can view the channel. Feedback and moderation destinations are intended for the operator and authorized reviewers; access follows their channel and storage permissions. The operator does not sell personal information. Information is used to operate the features described here.
 
-The operator is established outside the EU/UK and has not appointed an EU or UK representative under GDPR Article 27 / UK GDPR Article 27, relying on the exemption for processing that is occasional, does not include large-scale processing of special categories of data, and is unlikely to result in a risk to the rights and freedoms of natural persons (Art. 27(2)(a)). EU/UK users may direct all inquiries to the contact in Section 11.
+## Choices and requests
 
----
+You can choose not to invoke commands, submit feedback or emote requests, or complete optional account-linking and game details. Opening account setup still creates the basic Discord record described above. Queue buttons let you leave or skip a session; they do not erase all stored information. Restarting setup, changing a linked account, or removing a game from the active list can cancel or archive records rather than delete their history.
 
-## 6. Retention
+Depending on applicable law, you may have rights to access, correct, delete, restrict or object to processing, obtain a portable copy, withdraw consent where applicable, or complain to a privacy regulator. Send requests to **sammymedows@gmail.com** or Discord user **sammymedows**, identifying your account and the relevant feature. The operator may need to verify the request concerns your account.
 
-| Data | Retention |
-|---|---|
-| In-memory queue state (voice state, line, line order, playing, opted-out, kept, played-this-session) | Cleared when the host clicks **Close** or **Open** on Community Day, when the Bot process restarts, or when you leave all tier voice channels (your voice-state entry only). No history of past sessions is kept. |
-| `settings.json` | Retained until the operator manually deletes the file or removes the Bot. Contains no personal user data beyond the streamer's own message ID. |
-| `channel_snapshots.json` | A snapshot per tier voice channel is overwritten the next time that channel is hidden from a visible state. Retained until the operator manually deletes the file. Contains no user IDs in current operation (role overwrites only). |
-| `schedule.json` | Retained until the operator manually deletes the file. Past date-specific overrides are automatically pruned from this file on each render once their date is in the past. Contains no user data. |
-| `.env` | Retained by the operator; not modified at runtime. |
+Saved queue records, signup profiles, former account links, verification and subscription history, game details, emote requests/images/drafts, exports, feedback, reports, ledger entries, logs, and backups need to be considered separately for deletion. Bot controls do not erase copies held by Discord, Twitch, YouTube or other recipients. There is no complete self-service deletion button; contact the operator for a request. Updating a Discord profile does not automatically rewrite historical records.
 
-When the Bot is removed from the server, or when the operator stops self-hosting it, all in-memory data ceases to exist immediately and all on-disk data can be wiped by deleting the `C:\TOOLS\community-bot\` directory.
+## Security
 
----
+The bot connects to Discord through HTTPS and secure WebSockets. Credentials are kept in operator-controlled configuration and secret storage, not the public policy repository. Access to files and private channels depends on account and permission controls.
 
-## 7. Your Rights
+Operational data is stored in JSON, text, SQLite databases and image files; these features do not themselves provide file encryption. As of October 18, 2026, the operator's computer drive that holds the bot's live files, including its local databases, queue state and settings, does not use Windows drive encryption. The encryption status of the operator's network storage and backups has not been verified, so this policy does not claim those copies are encrypted. No storage or transmission method guarantees absolute security.
 
-If you are located in the European Economic Area, the United Kingdom, or another jurisdiction that grants equivalent rights, you have the right to:
+## Children and changes
 
-- **Access** (GDPR Art. 15) — request a copy of the personal data the Bot holds about you. In practice, this is at most your Discord user ID and current voice-channel/line position, all held in memory.
-- **Rectification** (Art. 16) — request correction of inaccurate data. Display names are pulled live from Discord; update your Discord profile to correct them.
-- **Erasure / "right to be forgotten"** (Art. 17) — request deletion of your data. Because almost all data is in RAM, you can effectively erase yourself at any time by clicking **Leave** or **Skip Me** in `#the-list`, by leaving the tier voice channels, or by waiting for the next Community Day close/open or Bot restart.
-- **Restriction of processing** (Art. 18).
-- **Data portability** (Art. 20) — request your data in a machine-readable format (JSON).
-- **Objection** (Art. 21) — object to processing based on legitimate interest. The simplest mechanism is to click **Leave** / **Skip Me** or to not join a tier voice channel.
-- **Withdraw consent** (Art. 7(3)) — where any processing is based on consent.
-- **Lodge a complaint** with your local data protection supervisory authority. In the EU, a list is available at https://edpb.europa.eu/about-edpb/about-edpb/members_en.
+Discord requires users to meet its minimum age requirements. The bot is not intended to collect information from children below the applicable age; contact the operator if such information was submitted.
 
-To exercise any right that is not satisfied by the in-app buttons, contact the operator at **sammymedows@gmail.com** or via Discord DM to `sammymedows`. The operator will respond within one month of receiving a verifiable request, in line with GDPR Article 12(3).
+This policy may change with the bot's features. The date above identifies the current version. Material changes will be communicated in the community server. Contact the operator with questions.
 
-### California residents (CCPA / CPRA)
-
-The operator does not currently meet the thresholds that make CCPA/CPRA compliance mandatory. As a matter of good practice, California residents may nevertheless exercise rights to know, delete, correct, and opt out of any "sale" or "sharing" of personal information by contacting the operator at the address above. **The operator does not sell or share personal information** within the meaning of the CPRA.
-
-### Guild owners
-
-If you are the owner or administrator of a Discord server in which Community Bot has been installed, you can purge all guild-level data by removing the Bot from the server and asking the operator to delete the on-disk files associated with your guild.
-
----
-
-## 8. Security
-
-The Bot runs as a local Python process on the operator's personal computer. Security measures include:
-
-- The Discord bot token is stored only in the local `.env` file and is excluded from backups and source-control sharing.
-- No data is transmitted to third parties beyond Discord's own APIs.
-- The HTTP `/line` endpoint listens on all network interfaces of the host machine (TCP port 8767) but exposes only the current queue display names and tier labels (information already visible inside Discord). The host machine sits behind a residential NAT router with no port forwarding for 8767, so in practice the endpoint is reachable only from the operator's local network; the operator is responsible for keeping it unexposed to the public internet.
-- Access to the host machine is controlled by the operator's local OS account.
-
-No method of transmission or storage is 100% secure. In the event of a personal-data breach that is likely to result in a risk to your rights and freedoms, the operator will notify the competent supervisory authority within 72 hours (GDPR Art. 33) and, where the risk is high, will notify affected users without undue delay (Art. 34).
-
----
-
-## 9. Children
-
-Discord's own Terms of Service require users to be at least 13 years old (or older where local law requires, e.g. 16 in some EU Member States). Community Bot relies on Discord's age enforcement and **does not knowingly process data of users below the applicable minimum age**. If you believe a user below that age has interacted with the Bot, please contact the operator and any data associated with that user will be removed.
-
----
-
-## 10. Changes to This Policy
-
-This policy may be updated from time to time to reflect changes in the Bot or in applicable law. The "Last updated" date at the top of the document will always reflect the most recent version. Material changes will be announced in the Discord server where the Bot operates (typically in `#the-list` or the server's announcements channel) with reasonable notice. Continued use of the Bot after an update constitutes acceptance of the revised policy.
-
----
-
-## 11. Contact
-
-For any privacy question, data-subject request, or complaint about Community Bot:
-
-- **Email:** sammymedows@gmail.com
-- **Discord:** DM `sammymedows`
-
----
-
-*Community Bot is an independent project and is not endorsed by, affiliated with, or sponsored by Discord, Inc.*
+*Community Bot is independent and is not endorsed by or affiliated with Discord, Inc.*
