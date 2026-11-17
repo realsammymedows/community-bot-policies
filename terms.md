@@ -1,6 +1,6 @@
 # Terms of Service for Community Bot
 
-**Last Updated:** June 11, 2026
+**Last Updated:** November 17, 2026
 
 These Terms of Service ("Terms") govern your use of **Community Bot** (the "Bot"), a self-hosted Discord application operated by Sammy ("Operator," "we," "us," or "our"). By inviting, interacting with, or otherwise using the Bot in any Discord server, you ("you" or "User") agree to these Terms. If you do not agree, do not use the Bot and remove it from any server you administer.
 
@@ -10,9 +10,9 @@ By adding the Bot to a Discord server, using any of its commands, buttons, or me
 
 ## 2. Description of Service
 
-Community Bot is a Discord queue-management tool built for the Operator's "Community Day" events on the Medow Mafia Discord server. It allows viewers to join a play queue by entering tier voice channels, and allows the host and authorized moderators to pull viewers into a "LIVE" voice channel via an ephemeral Control Panel. The Bot also maintains a weekly stream-schedule message in a configured channel.
+Community Bot is a Discord queue-management tool built for the Operator's "Community Day" events on the Medow Mafia Discord server. It allows viewers to join a play queue by entering tier voice channels, and allows the host and authorized moderators to pull viewers into a "LIVE" voice channel via an ephemeral Control Panel. The Bot also maintains a weekly stream-schedule message in a configured channel, and runs **Apple Coins**, an optional community points program. Apple Coins lets members set up an account, link Twitch or YouTube accounts, earn coins from community activity and support, and use available coin rewards. Community Day entry tickets and line skips are handled in Discord. The Medow Mafia website provides private account views and related account features.
 
-The Bot is a non-commercial, self-hosted Python application running on the Operator's personal computer. It also exposes a small status endpoint on the Operator's local network that returns the current queue as plain text (display names and queue positions) for use by the Operator's streaming tools. There are no fees, paid features, subscriptions, or in-app purchases. The Bot is provided primarily for the Operator's own community; while it is technically possible to invite it to other servers, it is not marketed, supported, or guaranteed to function outside its intended environment.
+The Bot is a self-hosted Python application running on the Operator's personal computer. It also exposes a small status endpoint on the Operator's local network that returns the current queue as plain text (display names and queue positions) for use by the Operator's streaming tools. The Bot does not directly collect payments. Apple Coins records include earning, redemption and refund-related adjustments under the program rules. The Bot is provided primarily for the Operator's own community; while it is technically possible to invite it to other servers, it is not marketed, supported, or guaranteed to function outside its intended environment.
 
 ## 3. Eligibility
 
@@ -40,7 +40,7 @@ The Operator reserves the right to filter, deny service to, or remove from the q
 
 ## 5. Privacy
 
-The Bot processes a minimal amount of Discord-provided data (such as user IDs, voice channel state, display names, and role membership) solely to operate the queue and schedule features. The Bot does **not** read message content and does not use analytics or telemetry. Other than communication with Discord's own services, data does not leave the Operator's machine — except that the current queue (display names and positions) is available as plain text to devices on the Operator's local network via the status endpoint described in Section 2. Details on what is collected, how it is used, how long it is retained, and how to request deletion are set out in our separate [Privacy Policy](https://realsammymedows.github.io/community-bot-policies/privacy), which is incorporated into these Terms by reference.
+The Bot processes Discord-provided data (such as user IDs, voice channel state, display names, role membership and message metadata) and, for Apple Coins, linked Twitch and YouTube account and activity data. Discord's Message Content access is currently off, and the Bot does not use advertising analytics or telemetry. Some data is sent to services the Operator uses, such as Twitch, YouTube, the Operator's network storage, website hosting and a private spreadsheet, and the current queue is available as plain text to devices on the Operator's local network via the status endpoint described in Section 2. Details on what is collected, how it is used and shared, how long it is retained, and how to request deletion are set out in our separate [Privacy Policy](https://realsammymedows.github.io/community-bot-policies/privacy), which is incorporated into these Terms by reference.
 
 ## 6. Intellectual Property
 
